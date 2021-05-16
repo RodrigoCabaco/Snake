@@ -1,0 +1,190 @@
+include "headers.h.rcode"
+useful_defines()
+#fix up/down
+
+function game_over() => {
+    clear()
+    Write "Game Over, Score: $score$"
+};
+
+function display_score(num score);{
+    cursor_x >>0
+    cursor_y >>0
+    Write "Score: "
+    WriteNum {score}
+};
+
+
+function new_berry(); => {
+    float berry_x = rand:1,$screen_width$
+    float berry_y = rand:1,$screen_height$
+};
+
+function draw_screen(x, y, length); => {
+    clear()
+    display_score()
+    num current_x  = x
+    num current_y = y
+    if str(direction=="Backwards");{
+        num head = x
+        ;;num len_2 = length;;len_2*2;;head+len_2;;
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+        ++head;
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+        length*2
+        for part in range:length;{
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            ++current_x;
+        };
+    };
+    if str(direction=="Forward");{
+        num head = x
+        --head;
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+        --head
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+        length*2
+        for part in range:length;{
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            ++current_x;
+        };
+    };
+    if str(direction=="Downwards");{
+        for part in range:length;{
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            ++current_y;
+        };
+        num head = x
+        --head;
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+        --head
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+    };
+    if str(direction=="Upwards");{
+        for part in range:length;{
+            --current_y;
+            ++current_x;
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            current_x--
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+                r
+
+        };
+        num head = x
+        --head;
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+        --head
+        draw_color(num x = head;;num y = current_y;;str color = "red")
+    };
+    
+    num head_x = _x
+    float __length = _length
+    __length*2
+    num head_y = _y
+    draw_color(num x = berry_x;;num y = berry_y;;str color = "red")
+    ++berry_x;
+    draw_color(num x = berry_x;;num y = berry_y;;str color = "red")
+    --berry_x;
+
+};
+
+
+function main_loop() => {
+    function get_key();{
+        str keypressed = $readkey
+        if str(keypressed=="UpArrow");{
+            if str(direction!="Upwards");{
+                str direction = "Upwards"
+            };
+        };
+        if str(keypressed=="RightArrow");{
+            if str(direction!="Backwards");{
+                str direction = "Backwards"
+            };
+        };
+        if str(keypressed=="LeftArrow");{
+            if str(direction!="Forward");{
+                str direction = "Forward"
+            };
+        };
+        if str(keypressed=="DownArrow");{
+            if str(direction!="Downwards");{
+                str direction = "Downwards"
+            };
+        };
+        if str(keypressed=="Escape");{
+            exit()
+        };
+    };
+    num _x = 70
+    num _y = 10
+    while str(True=="True");{
+        if str(keyavailable=="True");{
+            get_key()
+        };  
+        draw_screen(num x = _x;;num y = _y;;num length = _length)
+        if str(direction=="Forward");{
+            --_x;
+            num speed = speed_x
+        };
+        if str(direction=="Backwards");{
+            ++_x;
+            num speed = speed_x
+        };
+        if str(direction=="Upwards");{
+            --_y;
+            num speed = speed_y
+        };
+        if str(direction=="Downwards");{
+            ++_y;
+            num speed = speed_y
+        };
+        if num(head_x<=0);{
+            game_over()
+            exit()
+
+        };
+        if num(head_y+>screen_height);{
+            game_over()
+            exit()
+        };
+        if num(head_y<=0);{
+            game_over()
+            exit()
+        };
+        if num(head_x+>screen_width);{
+            game_over()
+            exit()
+        };
+        #If we hit a berry
+        --berry_x;
+        if num(head_x==berry_x);{
+            if num(head_y==berry_y);{
+                ++score;
+                new_berry()
+                speed_x+2
+                ++speed_y
+                ++_length;
+            };
+        };
+        ++berry_x;
+        cursor_x >>0
+        cursor_y >>0
+        sleep >>speed
+    };
+};
+
+function main() => {
+    # The lower this is the more speed the snake has
+    str direction = "Forward"
+    num speed_y = 80
+    num speed_x = 50
+    num score = 0
+    num _length = 2
+    new_berry()
+    clear()
+    main_loop()
+};
+
+main()
+exit()
