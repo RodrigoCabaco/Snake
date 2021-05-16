@@ -50,31 +50,46 @@ function draw_screen(x, y, length); => {
         };
     };
     if str(direction=="Downwards");{
-        for part in range:length;{
-            draw_color(num x = current_x;;num y = current_y;;str color = "green")
-            ++current_y;
-        };
         num head = x
         --head;
         draw_color(num x = head;;num y = current_y;;str color = "red")
         --head
         draw_color(num x = head;;num y = current_y;;str color = "red")
+        for part in range:length;{
+            # ##
+            # ##
+            #   =
+            --current_y;
+            --current_x;
+
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            #--current_x;
+            --current_x;
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            #current_x+2
+            current_x+2
+        };
     };
     if str(direction=="Upwards");{
-        for part in range:length;{
-            --current_y;
-            ++current_x;
-            draw_color(num x = current_x;;num y = current_y;;str color = "green")
-            current_x--
-            draw_color(num x = current_x;;num y = current_y;;str color = "green")
-                r
-
-        };
         num head = x
         --head;
         draw_color(num x = head;;num y = current_y;;str color = "red")
         --head
         draw_color(num x = head;;num y = current_y;;str color = "red")
+        for part in range:length;{
+            # ##
+            # ##
+            #   =
+            ++current_y;
+            --current_x;
+
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            #--current_x;
+            --current_x;
+            draw_color(num x = current_x;;num y = current_y;;str color = "green")
+            #current_x+2
+            current_x+2
+        };
     };
     
     num head_x = _x
